@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0a0a0a;
+    --paper: #f5f0e8;
+    --acid: #c8ff00;
+    --rust: #d4400a;
+    --smoke: #b8b0a0;
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-mono: 'Space Mono', monospace;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.2rem 2.5rem;
+    mix-blend-mode: multiply;
+  }
+  .nav-logo {
+    font-family: var(--font-display); font-size: 1.1rem; letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .nav-links { display: flex; gap: 2rem; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  .nav-links a { color: var(--ink); text-decoration: none; opacity: 0.6; transition: opacity 0.2s; }
+  .nav-links a:hover { opacity: 1; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    background: var(--ink);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 4rem 3rem 4rem 3rem;
+    position: relative;
+  }
+
+  .hero-left::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(255,255,255,0.015) 3px,
+      rgba(255,255,255,0.015) 4px
+    );
+  }
+
+  .hero-label {
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--acid); margin-bottom: 1.5rem;
+  }
+
+  .hero-name {
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 7vw, 6rem);
+    line-height: 0.92;
+    color: #f5f0e8;
+    margin-bottom: 2rem;
+  }
+
+  .hero-name em {
+    font-style: italic; color: var(--acid);
+  }
+
+  .hero-desc {
+    font-size: 0.78rem; line-height: 1.8; color: rgba(245,240,232,0.55);
+    max-width: 28ch; margin-bottom: 2.5rem;
+  }
+
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 0.8rem;
+    background: var(--acid); color: var(--ink);
+    padding: 0.85rem 1.8rem;
+    font-family: var(--font-mono); font-size: 0.72rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    text-decoration: none; font-weight: 700;
+    transition: background 0.2s;
+    width: fit-content;
+  }
+  .hero-cta:hover { background: #fff; }
+
+  .hero-right {
+    background: #1a1510;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Simulated photo grid */
+  .photo-grid-hero {
+    position: absolute; inset: 0;
+    display: grid;
+    grid-template-rows: 55% 45%;
+    gap: 3px;
+  }
+  .photo-top {
+    background: linear-gradient(135deg, #2a1f0e 0%, #0a0a0a 100%);
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .photo-bottom-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3px;
+  }
+  .photo-b {
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .photo-b:nth-child(1) { background: #1a0a00; }
+  .photo-b:nth-child(2) { background: var(--rust); }
+
+  .photo-placeholder {
+    font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(245,240,232,0.25); text-align: center; padding: 1rem;
+  }
+
+  .corner-tag {
+    position: absolute; bottom: 0.8rem; right: 0.8rem;
+    font-size: 0.55rem; letter-spacing: 0.1em;
+    color: var(--acid); opacity: 0.7;
+  }
+
+  /* Animated scan line on hero right */
+  .scan-line {
+    position: absolute; left: 0; right: 0; height: 2px;
+    background: var(--acid); opacity: 0.4;
+    animation: scan 4s linear infinite;
+  }
+  @keyframes scan {
+    from { top: -2px; }
+    to { top: 100%; }
+  }
+
+  /* COUNTER STRIP */
+  .counter-strip {
+    background: var(--acid); color: var(--ink);
+    padding: 0.9rem 2.5rem;
+    display: flex; gap: 4rem; align-items: center;
+    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+    overflow: hidden; position: relative;
+  }
+  .counter-item { display: flex; gap: 1rem; align-items: baseline; }
+  .counter-num { font-size: 1.4rem; font-weight: 700; }
+
+  /* WORKS SECTION */
+  .section { padding: 6rem 2.5rem; }
+  .section-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 3rem; border-bottom: 1px solid rgba(10,10,10,0.12); padding-bottom: 1.5rem;
+  }
+  .section-title {
+    font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1; letter-spacing: -0.03em;
+  }
+  .section-num {
+    font-size: 0.65rem; letter-spacing: 0.2em; color: var(--smoke);
+  }
+
+  /* MASONRY GALLERY */
+  .gallery-masonry {
+    columns: 3; column-gap: 1rem;
+  }
+  .gallery-item {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+  .gallery-item:hover .gallery-img { transform: scale(1.03); }
+
+  .gallery-img {
+    width: 100%;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .gallery-overlay {
+    position: absolute; inset: 0;
+    background: rgba(10,10,10,0.75);
+    display: flex; flex-direction: column;
+    justify-content: flex-end; padding: 1.2rem;
+    opacity: 0; transition: opacity 0.3s ease;
+  }
+  .gallery-tag {
+    font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--acid); margin-bottom: 0.4rem;
+  }
+  .gallery-caption {
+    font-family: var(--font-display); font-size: 1.1rem; color: #f5f0e8;
+    font-style: italic;
+  }
+
+  /* Colored gallery blocks */
+  .gb-1 { background: #1a1a1a; aspect-ratio: 4/5; }
+  .gb-2 { background: #2d1500; aspect-ratio: 3/4; }
+  .gb-3 { background: #0a1a10; aspect-ratio: 1/1; }
+  .gb-4 { background: var(--rust); aspect-ratio: 3/2; }
+  .gb-5 { background: #1a0d1a; aspect-ratio: 4/3; }
+  .gb-6 { background: #0f0f1a; aspect-ratio: 3/4; }
+  .gb-7 { background: #1a1500; aspect-ratio: 1/1; }
+  .gb-8 { background: #0a0a0a; aspect-ratio: 4/5; }
+  .gb-9 { background: #1a1010; aspect-ratio: 3/2; }
+
+  .gb-noise {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .gb-noise::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+    opacity: 0.3;
+  }
+  .img-label {
+    font-size: 0.6rem; letter-spacing: 0.1em; color: rgba(245,240,232,0.3);
+    text-transform: uppercase; text-align: center;
+  }
+
+  /* ABOUT SECTION */
+  .about-section {
+    background: var(--ink); color: var(--paper);
+    padding: 6rem 2.5rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+  }
+  .about-eyebrow {
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--acid); margin-bottom: 1.5rem;
+  }
+  .about-title {
+    font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.1; margin-bottom: 2rem;
+  }
+  .about-title em { color: var(--acid); font-style: italic; }
+  .about-text {
+    font-size: 0.82rem; line-height: 2; color: rgba(245,240,232,0.6);
+    margin-bottom: 2rem;
+  }
+  .about-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .tag {
+    border: 1px solid rgba(245,240,232,0.2);
+    padding: 0.4rem 0.9rem;
+    font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(245,240,232,0.5);
+  }
+  .tag.acid { border-color: var(--acid); color: var(--acid); }
+
+  .about-visual {
+    position: relative; aspect-ratio: 3/4;
+    background: #1a1510;
+    overflow: hidden;
+  }
+  .about-visual::before {
+    content: '+'; position: absolute; font-size: 8rem; font-family: var(--font-display);
+    color: var(--rust); opacity: 0.15; top: -1rem; left: -1rem; line-height: 1;
+  }
+  .about-visual-inner {
+    position: absolute; inset: 2rem 2rem 2rem 2rem;
+    border: 1px solid rgba(200,255,0,0.2);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .av-placeholder {
+    text-align: center; font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: rgba(245,240,232,0.2);
+  }
+
+  /* CATEGORIES */
+  .categories {
+    padding: 5rem 2.5rem;
+    background: var(--paper);
+  }
+  .cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(10,10,10,0.1); }
+  .cat-item {
+    background: var(--paper); padding: 2.5rem 2rem;
+    position: relative; cursor: pointer;
+    transition: background 0.25s;
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+  .cat-item:hover { background: var(--ink); }
+  .cat-item:hover .cat-title { color: var(--acid); }
+  .cat-item:hover .cat-desc { color: rgba(245,240,232,0.5); }
+  .cat-item:hover .cat-num { color: rgba(245,240,232,0.2); }
+  .cat-item:hover .cat-arrow { color: var(--acid); }
+
+  .cat-num { font-size: 0.65rem; color: var(--smoke); letter-spacing: 0.1em; }
+  .cat-title { font-family: var(--font-display); font-size: 1.6rem; transition: color 0.25s; }
+  .cat-desc { font-size: 0.72rem; line-height: 1.8; color: var(--smoke); transition: color 0.25s; }
+  .cat-arrow { font-size: 1.2rem; transition: color 0.25s; margin-top: auto; }
+
+  /* CONTACT */
+  .contact-section {
+    padding: 7rem 2.5rem;
+    background: #0a0a0a;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .contact-section::before {
+    content: 'CONTACTO';
+    position: absolute; bottom: -2rem; left: 50%; transform: translateX(-50%);
+    font-family: var(--font-display); font-size: 15vw; color: rgba(245,240,232,0.03);
+    white-space: nowrap; pointer-events: none;
+  }
+  .contact-eyebrow {
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--acid); margin-bottom: 1.5rem;
+  }
+  .contact-title {
+    font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 5rem);
+    color: var(--paper); line-height: 1; margin-bottom: 2.5rem;
+  }
+  .contact-title em { color: var(--acid); font-style: italic; }
+  .contact-email {
+    display: inline-block; font-size: clamp(0.9rem, 2vw, 1.2rem);
+    color: var(--paper); text-decoration: none; letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--acid); padding-bottom: 0.2rem;
+    margin-bottom: 3rem;
+  }
+  .contact-social { display: flex; justify-content: center; gap: 2rem; }
+  .social-link {
+    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--smoke); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .social-link:hover { color: var(--acid); }
+
+  /* FOOTER */
+  footer {
+    background: #0a0a0a; border-top: 1px solid rgba(245,240,232,0.05);
+    padding: 1.5rem 2.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.65rem; color: rgba(245,240,232,0.3);
+    letter-spacing: 0.1em;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .about-section { grid-template-columns: 1fr; }
+    .about-visual { display: none; }
+    .gallery-masonry { columns: 2; }
+    .cat-grid { grid-template-columns: 1fr; }
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Tu Nombre</div>
+  <div class="nav-links">
+    <a href="#works">Trabajos</a>
+    <a href="#about">Sobre mí</a>
+    <a href="#contact">Contacto</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-label">Fotógrafa / Directora visual &nbsp;·&nbsp; Colombia</div>
+    <h1 class="hero-name">
+      Mirada<br><em>sin filtro</em>
+    </h1>
+    <p class="hero-desc">
+      Imágenes que incomodan, conmueven y no se olvidan. Documental, editorial y lo que no tiene nombre todavía.
+    </p>
+    <a href="#works" class="hero-cta">Ver portafolio →</a>
+  </div>
+  <div class="hero-right">
+    <div class="photo-grid-hero">
+      <div class="photo-top">
+        <div class="gb-noise">
+          <span class="photo-placeholder">Tu foto principal aquí<br>reemplaza este bloque con &lt;img&gt;</span>
+        </div>
+        <div class="scan-line"></div>
+        <span class="corner-tag">01 / HERO</span>
+      </div>
+      <div class="photo-bottom-row">
+        <div class="photo-b" style="background:#2d1500;">
+          <div class="gb-noise"><span class="photo-placeholder">Foto 02</span></div>
+        </div>
+        <div class="photo-b" style="background:var(--rust);">
+          <div class="gb-noise"><span class="photo-placeholder">Foto 03</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COUNTER -->
+<div class="counter-strip">
+  <div class="counter-item"><span class="counter-num">3</span><span>series activas</span></div>
+  <div class="counter-item"><span class="counter-num">5+</span><span>años de trabajo</span></div>
+  <div class="counter-item"><span class="counter-num">2</span><span>convocatorias ganadoras</span></div>
+  <div class="counter-item"><span class="counter-num">CO/LAT</span><span>base</span></div>
+</div>
+
+<!-- WORKS -->
+<section class="section" id="works">
+  <div class="section-header">
+    <h2 class="section-title">Trabajos</h2>
+    <span class="section-num">[ 09 piezas ]</span>
+  </div>
+
+  <div class="gallery-masonry">
+
+    <div class="gallery-item">
+      <div class="gallery-img gb-1"><div class="gb-noise" style="min-height:280px;"><span class="img-label">Serie 01<br>Reemplaza con imagen</span></div></div>
+      <div class="gallery-overlay">
+        <span class="gallery-tag">Documental</span>
+        <span class="gallery-caption">Nombre del proyecto</span>
+      </div>
+    </div>
+
+    <div class="gallery-item">
+      <div class="gallery-img gb-2"><div class="gb-noise" style="min-height:220px;"><span class="img-label">Serie 02</span></div></div>
+      <div class="gallery-overlay">
+        <span class="gallery-tag">Editorial</span>
+        <span class="gallery-caption">Nombre del proyecto</span>
+      </div>
+    </div>
+
+    <div class="gallery-item">
+      <div class="gallery-img gb-3"><div class="gb-noise" style="min-height:200px;"><span class="img-label">Serie 03</span></div></div>
+      <div class="gallery-overlay">
+        <span class="gallery-tag">Video</span>
+        <span class="gallery-caption">Nombre del proyecto</span>
+      </div>
+    </div>
+
+    <div class="gallery-item">
+      <div class="gallery-img gb-4"><div class="gb-noise" style="min-height:180px;"><span class="img-label">Serie 04</span></div></div>
+      <div class="gallery-overlay">
+        <span class="gallery-tag">Retrato</span>
+        <span class="gallery-caption">Nombre del proyecto</span>
+      </div>
+    </div>
+
+    <div class="gallery-item">
+      <div class="gallery-img gb-5"><div class="gb-noise" style="min-height:240px;"><span class="img-label">Serie 05</span></div></div>
+      <div class="gallery-overlay">
+        <span class="gallery-tag">Urbano</span>
+        <span class="gallery-caption">Nombre del proyecto</span>
+      </div>
+    </div>
+
+    <div class="gallery-item">
+      <div class="gallery-img gb-6"><div class="gb-noise" style="min-height:210px;"><span class="img-label">Serie 06</span></div></div>
+      <div class="gallery-overlay">
+        <span class="gallery-tag">Experimental</span>
+        <span class="gallery-caption">Nombre del proyecto</span>
+      </div>
+    </div>
+
+    <div class="gallery-item">
+      <div class="gallery-img gb-7"><div class="gb-noise" style="min-height:190px;"><span class="img-label">Serie 07</span></div></div>
+      <div class="gallery-overlay">
+        <span class="gallery-tag">Documental</span>
+        <span class="gallery-caption">Nombre del proyecto</span>
+      </div>
+    </div>
+
+    <div class="gallery-item">
+      <div class="gallery-img gb-8"><div class="gb-noise" style="min-height:260px;"><span class="img-label">Serie 08</span></div></div>
+      <div class="gallery-overlay">
+        <span class="gallery-tag">Film</span>
+        <span class="gallery-caption">Nombre del proyecto</span>
+      </div>
+    </div>
+
+    <div class="gallery-item">
+      <div class="gallery-img gb-9"><div class="gb-noise" style="min-height:170px;"><span class="img-label">Serie 09</span></div></div>
+      <div class="gallery-overlay">
+        <span class="gallery-tag">Personal</span>
+        <span class="gallery-caption">Nombre del proyecto</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="categories">
+  <div class="cat-grid">
+    <div class="cat-item">
+      <span class="cat-num">01</span>
+      <h3 class="cat-title">Fotografía documental</h3>
+      <p class="cat-desc">Cuerpos, territorios y lo que el tiempo no borra.</p>
+      <span class="cat-arrow">→</span>
+    </div>
+    <div class="cat-item">
+      <span class="cat-num">02</span>
+      <h3 class="cat-title">Dirección de video</h3>
+      <p class="cat-desc">Narrativa visual en movimiento. Cortos, clips y piezas de autor.</p>
+      <span class="cat-arrow">→</span>
+    </div>
+    <div class="cat-item">
+      <span class="cat-num">03</span>
+      <h3 class="cat-title">Editorial & arte</h3>
+      <p class="cat-desc">Imagen para publicaciones, exposiciones y convocatorias.</p>
+      <span class="cat-arrow">→</span>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-section" id="about">
+  <div>
+    <div class="about-eyebrow">Sobre mí</div>
+    <h2 class="about-title">Nombra aquí tu<br><em>enfoque único</em></h2>
+    <p class="about-text">
+      Escribe aquí tu declaración de intenciones: qué fotografías, por qué, y qué diferencia tu mirada. Una o dos frases que solo tú podrías escribir. Esta sección es la que los jurados de convocatorias leen con más atención.
+    </p>
+    <p class="about-text">
+      Formación, referencias, proyectos en curso. Sé específica: nombres de series, fechas, lugares.
+    </p>
+    <div class="about-tags">
+      <span class="tag acid">Colombia</span>
+      <span class="tag">Fotografía de calle</span>
+      <span class="tag">Documental</span>
+      <span class="tag">Analog / Digital</span>
+      <span class="tag">Video arte</span>
+    </div>
+  </div>
+  <div class="about-visual">
+    <div class="about-visual-inner">
+      <div class="av-placeholder">Tu fotografía<br>de perfil aquí</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-eyebrow">Hablemos</div>
+  <h2 class="contact-title">¿Trabajamos<br><em>juntos?</em></h2>
+  <a href="mailto:tu@email.com" class="contact-email">tu@email.com</a>
+  <div class="contact-social">
+    <a href="#" class="social-link">Instagram</a>
+    <a href="#" class="social-link">Behance</a>
+    <a href="#" class="social-link">Vimeo</a>
+    <a href="#" class="social-link">LinkedIn</a>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Tu Nombre</span>
+  <span>Fotografía &amp; Dirección visual</span>
+  <span>Colombia</span>
+</footer>
+
+</body>
+</html>
